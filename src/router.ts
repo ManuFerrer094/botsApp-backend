@@ -1,4 +1,4 @@
-import { Router } from 'express'
+import { Router } from 'express'
 import { body, param } from 'express-validator'
 import { createBot, deleteBot, getBotById, getBots, updateAvailability, updateBot } from './handlers/bots'
 import { handleInputErrors } from './middleware'
@@ -19,15 +19,40 @@ const router = Router()
  *                  name:
  *                      type: string
  *                      description: The Bot name
- *                      example: GPT 8
+ *                      example: Asistente de compras
  *                  price:
  *                      type: number
  *                      description: The Bot price
- *                      example: 300
+ *                      example: 17
  *                  availability:
  *                      type: boolean
  *                      description: The Bot availability
- *                      example: true
+ *                      example: false
+ *                  description:
+ *                      type: string
+ *                      description: The Bot description
+ *                      example: Este bot está diseñado para ayudarte con tus compras en línea. Puedes hacer preguntas sobre productos, recibir recomendaciones personalizadas y realizar compras directamente a través del bot.
+ *                  basePersonality:
+ *                      type: string
+ *                      description: Base personality of the Bot
+ *                      example: Amigable y servicial
+ *                  formality:
+ *                      type: string
+ *                      description: Formality level of the Bot
+ *                      example: Moderada
+ *                  enthusiasm:
+ *                      type: string
+ *                      description: Enthusiasm level of the Bot
+ *                      example: Moderado
+ *                  humor:
+ *                      type: string
+ *                      description: Humor level of the Bot
+ *                      example: Ligero
+ *                  useCaseTemplate:
+ *                      type: string
+ *                      description: Use case template of the Bot
+ *                      example: Conversación
+
  */
 
 /**
@@ -97,14 +122,7 @@ router.get('/:id',
  *          content:
  *              application/json:
  *                  schema:
- *                      type: object
- *                      properties:
- *                          name:
- *                              type: string
- *                              example: "GPT 8"
- *                          price:
- *                              type: number
- *                              example: 399
+ *                      $ref: '#/components/schemas/Bot'
  *      responses:
  *          201:
  *              description: Successful response
@@ -119,10 +137,10 @@ router.get('/:id',
 router.post('/', 
     // Validación
     body('name')
-        .notEmpty().withMessage('El nombre de Bot no puede ir vacio'),
+        .notEmpty().withMessage('El nombre de Bot no puede ir vacío'),
     body('price')
         .isNumeric().withMessage('Valor no válido')
-        .notEmpty().withMessage('El precio de Bot no puede ir vacio')
+        .notEmpty().withMessage('El precio de Bot no puede ir vacío')
         .custom(value => value > 0).withMessage('Precio no válido'),
     handleInputErrors,
     createBot
@@ -148,17 +166,7 @@ router.post('/',
  *          content:
  *              application/json:
  *                  schema:
- *                      type: object
- *                      properties:
- *                          name:
- *                              type: string
- *                              example: "GPT 8"
- *                          price:
- *                              type: number
- *                              example: 399
- *                          availability:
- *                              type: boolean
- *                              example: true
+ *                      $ref: '#/components/schemas/Bot'
  *      responses:
  *          200:
  *              description: Successful response
@@ -175,10 +183,10 @@ router.post('/',
 router.put('/:id', 
     param('id').isInt().withMessage('ID no válido'),
     body('name')
-        .notEmpty().withMessage('El nombre de Bot no puede ir vacio'),
+        .notEmpty().withMessage('El nombre de Bot no puede ir vacío'),
     body('price')
         .isNumeric().withMessage('Valor no válido')
-        .notEmpty().withMessage('El precio de Bot no puede ir vacio')
+        .notEmpty().withMessage('El precio de Bot no puede ir vacío')
         .custom(value => value > 0).withMessage('Precio no válido'),
     body('availability')
         .isBoolean().withMessage('Valor para disponibilidad no válido'),
